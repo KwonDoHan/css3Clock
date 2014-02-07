@@ -78,3 +78,63 @@ for (var i = 0; i < 60; i++) {
 
 ### 움직이는 시/분/초침 추가하기 ###
 
+시/분/초침을 시계에 추가하기 위해서 아래와 같이 3개의 엘리먼트를 `#clock` 엘리먼트의 자식 노드로 추가한다.
+
+```html
+<div id="seconds" class="handofwatch"></div>
+<div id="minutes" class="handofwatch"></div>
+<div id="hours" class="handofwatch"></div>
+```
+
+그리고 이제 CSS 값을 적당히 변경해 줌으로써 시계가 움직이도록 만들어 보자.
+가장 기본은 `setInterval` 함수를 사용하는 것이다.
+이 함수를 통해서 1초마다 현재 시간을 가져와서 시/분/초침에 해당하는 엘리먼트를 적당히 이동/회전시킬 것이다.
+
+아래 코드가 이 내용을 전부 다루고 있다.
+분/초침은 현재 값에 따라 6도씩 곱하면 얼마나 회전시켜야 하는지 알 수 있다.
+시침의 경우는 약간의 계산이 더 필요하다.
+아래 예제에서 hourDeg 변수 값을 계산하는 것이 그 내용이다.
+말로 표현하자면, 시침은 초기 회전 값 180도(`DIV` 엘리먼트의 초기 이동과 관련 있음)에 1시간에 30도 회전하고, 1분에 0.5도씩 회전한 값이 최종적으로 회전해야 할 값이 된다.
+
+```javascript
+    // 시계 침 계산
+var secElement = document.getElementById("seconds");
+var minElement = document.getElementById("minutes");
+var hourElement = document.getElementById("hours");
+
+var defaults = {
+  sec:  { width:  4, height: 160 },
+  min:  { width: 14, height: 180 },
+  hour: { width: 16, height: 120 }
+}
+
+var sec = 0, min = 0, hour = 0;
+setInterval( function () {
+  sec = new Date().getSeconds();
+  min = new Date().getMinutes();
+  hour = new Date().getHours();
+
+  css(secElement, {
+    width: defaults.sec.width + "px",
+    height: defaults.sec.height + "px",
+    transformOrigin: (defaults.sec.width / 2) + "px 0px 0",
+    transform: "translate(" + (200 - defaults.sec.width / 2) + "px, 200px) rotate(" + (180 + sec * 6) + "deg)" 
+  });
+
+  css(minElement, {
+    width: defaults.min.width + "px",
+    height: defaults.min.height + "px",
+    transformOrigin: (defaults.min.width / 2) + "px 0px 0",
+    transform: "translate(" + (200 - defaults.min.width / 2) + "px, 200px) rotate(" + (180 + min * 6) + "deg)" 
+  });
+
+  var hourDeg = 180 + (hour % 12) * 30 + min / 2;
+
+  css(hourElement, {
+    width: defaults.hour.width + "px",
+    height: defaults.hour.height + "px",
+    transformOrigin: (defaults.hour.width / 2) + "px 0px 0",
+    transform: "translate(" + (200 - defaults.hour.width / 2) + "px, 200px) rotate(" + hourDeg + "deg)" 
+  });
+}, 1000);
+```
