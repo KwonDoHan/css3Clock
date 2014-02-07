@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+<head>
+  <title>CSS3 Clock</title>
+  <meta charset="utf-8" />
+  <style type="text/css">
+  * { padding: 0px; margin: 0px; }
+  #clock {
+    position: relative;
+    top: 10px; left: 10px;
+    width: 400px; height: 400px;
+    border: 20px solid rgba(30, 30, 30, 0.9);
+    border-radius: 400px;
+    box-shadow: 2px 4px 8px rgba(50, 50, 50, 0.8);
+  }
+  #core {
+    position: absolute;
+    top: 140px; left: 140px;
+    width: 40px; height: 40px;
+    border-radius: 60px;
+    background: rgba(50, 50, 50, 0.6);
+    border: 40px solid rgba(50, 50, 50, 0.6);
+    box-shadow: 2px 4px 8px rgba(50, 50, 50, 0.8);
+    z-index: 10;
+  }
+  .mark {
+    font-size: 10px;
+
+    width: 400px; height: 400px;
+    line-height: 400px;
+    text-align: center;
+    text-shadow: 1px 2px 4px rgba(50, 50, 50, 0.8);
+    
+    position: absolute;
+    transform-origin: 50% 50% 0;
+  }
+  .number {
+    font-size: 35px;
+    font-weight: bold;
+
+    width: 400px; height: 400px;
+    line-height: 400px;
+    text-align: center;
+    text-shadow: 1px 2px 4px rgba(50, 50, 50, 0.8);
+
+    position: absolute;
+  }
+  .handofwatch {
+    position: absolute;
+    margin: 0px; padding: 0px;
+    border-style: solid;
+  }
+  #seconds { z-index: 8; box-shadow: 1px 2px 4px rgba(250, 50, 50, 0.6); }
+  #minutes { z-index: 6; box-shadow: 1px 2px 4px rgba(50, 50, 50, 0.6); }
+  #hours   { z-index: 4; box-shadow: 1px 2px 4px rgba(50, 50, 50, 0.6); }
+  </style>
+  <script type="text/javascript" src="/js/prefixfree.min.js"></script>
+  <script type="text/javascript" src="/js/projstech.min.js"></script>
+  <script type="text/javascript">
+  window.onload = function () {
+    "use strict";
+
+    // 시계 숫자, 눈금 표시
+    var clockElement = document.getElementById("clock");
+    for (var i = 1; i <= 12; i++) {
+      var numElement = document.createElement("div");
+      numElement.innerHTML = i;
+      numElement.classList.add("number");
+      css(numElement, { transform: "rotate(" + (i * 30) + "deg) translate(0px, -165px) rotate(-" + (i * 30) + "deg)" });
+      clockElement.appendChild(numElement);
+    }
+    for (var i = 0; i < 60; i++) {
+      var markElement = document.createElement("div");
+      markElement.innerHTML = "|";
+      markElement.classList.add("mark");
+      css(markElement, { transform: "rotate(" + (i * 6) + "deg) translate(0px, -196px)" });
+      if (i % 5 == 0) {
+        css(markElement, { fontSize: "20px", fontWeight: "bold" });
+      }
+      clockElement.appendChild(markElement);
+    }
+
+    // 시계 침 계산
+    var secElement = document.getElementById("seconds");
+    var minElement = document.getElementById("minutes");
+    var hourElement = document.getElementById("hours");
+
+    var defaults = {
+      second: { width:  4, height: 160, color: "rgba(250,  50,  50, 0.9)", borderWidth: 1, borderColor: "white" },
+      minute: { width: 14, height: 180, color: "rgba( 50,  50,  50, 0.9)", borderWidth: 1, borderColor: "white" },
+      hour:   { width: 16, height: 120, color: "rgba( 50,  50,  50, 0.9)", borderWidth: 1, borderColor: "white" }
+    };
+
+    var sec = 0, min = 0, hour = 0;
+    setInterval( function () {
+      sec = new Date().getSeconds();
+      min = new Date().getMinutes();
+      hour = new Date().getHours();
+
+      updateCSS(secElement, defaults.second, 180 + sec * 6);
+      updateCSS(minElement, defaults.minute, 180 + min * 6);
+      updateCSS(hourElement, defaults.hour, 180 + (hour % 12) * 30 + min / 2);
+
+      //console.info("CLOCK - " + hour + ":" + min + ":" + sec);
+    }, 1000);
+  };
+
+  function updateCSS (elem, attrs, degrees) {
+    css(elem, {
+      width: attrs.width + "px",
+      height: attrs.height + "px",
+      backgroundColor: attrs.color,
+      borderRadius: attrs.width + "px",
+      borderWidth: attrs.borderWidth + "px",
+      borderColor: attrs.borderColor,
+      transformOrigin: (attrs.width / 2 + attrs.borderWidth) + "px " + attrs.borderWidth + "px 0",
+      transform: "translate(" + (200 - attrs.width / 2 - attrs.borderWidth) + "px, " + (200 - attrs.borderWidth) + "px) rotate(" + degrees + "deg)"
+    });
+  }
+  </script>
+</head>
+<body>
+  <div id="clock">
+    <div id="core"></div>
+    <div id="seconds" class="handofwatch"></div>
+    <div id="minutes" class="handofwatch"></div>
+    <div id="hours" class="handofwatch"></div>
+  </div>
+</body>
+</html>
