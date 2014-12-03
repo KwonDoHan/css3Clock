@@ -1,0 +1,83 @@
+
+<!doctype html>
+<html>
+<head>
+	<title>CSS3 Clock</title>
+	<meta charset="utf-8" />
+	<style type="text/css">
+	* { padding: 0px; margin: 0px; }
+  body {
+    transform-origin: 0% 0% 0;
+    transform: scale(0.5);
+    overflow: hidden;
+  }
+	#clock {
+		position: relative;
+		top: 10px; left: 10px;
+		width: 400px; height: 400px;
+		border: 20px solid rgba(30, 30, 30, 0.9);
+		border-radius: 400px;
+		box-shadow: 2px 4px 8px rgba(50, 50, 50, 0.8);
+	}
+	#core {
+		position: absolute;
+		top: 140px; left: 140px;
+		width: 40px; height: 40px;
+		border-radius: 60px;
+		background: rgba(50, 50, 50, 0.6);
+		border: 40px solid rgba(50, 50, 50, 0.6);
+		box-shadow: 2px 4px 8px rgba(50, 50, 50, 0.8);
+		z-index: 10;
+	}
+	.mark {
+		font-size: 10px;
+		width: 400px; height: 400px;
+		line-height: 400px;
+		text-align: center;
+		text-shadow: 1px 2px 4px rgba(50, 50, 50, 0.8);
+		position: absolute;
+	}
+	.number {
+		font-size: 35px;
+		font-weight: bold;
+		width: 400px; height: 400px;
+		line-height: 400px;
+		text-align: center;
+		text-shadow: 1px 2px 4px rgba(50, 50, 50, 0.8);
+		position: absolute;
+	}
+	</style>
+	<script type="text/javascript" src="/js/prefixfree.min.js"></script>
+	<script type="text/javascript" src="/js/projstech.min.js"></script>
+	<script type="text/javascript">
+	window.onload = function () {
+		// 시계 숫자 표시
+		var clockElement = document.getElementById("clock");
+		for (var i = 1; i <= 12; i++) {
+			var numElement = document.createElement("div");
+			numElement.innerHTML = i;
+			numElement.classList.add("number");
+			css(numElement, { transform: "rotate(" + (i * 30) + "deg) translate(0px, -165px) rotate(-" + (i * 30) + "deg)" });
+			clockElement.appendChild(numElement);
+		}
+
+    // 시계 테두리의 눈금(mark) 표시
+		for (var i = 0; i < 60; i++) {
+			var markElement = document.createElement("div");
+			markElement.innerHTML = "|";
+			markElement.classList.add("mark");
+			css(markElement, { transform: "rotate(" + (i * 6) + "deg) translate(0px, -196px)" });
+			if (i % 5 == 0) {
+				css(markElement, { fontSize: "20px", fontWeight: "bold" });
+			}
+			clockElement.appendChild(markElement);
+		}
+	};
+	</script>
+</head>
+<body>
+	<div id="clock">
+		<div id="core"></div>
+	</div>
+</body>
+</html>

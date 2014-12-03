@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+<head>
+  <title>CSS3 Clock</title>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="/javascript/css3Clock/ex02.css" />
+  <style type="text/css">
+  .handofwatch {
+    position: absolute;
+    margin: 0px; padding: 0px;
+  }
+  #seconds {
+    z-index: 8;
+    box-shadow: 1px 2px 4px rgba(250, 50, 50, 0.6);
+    background-color: rgba(250,  50,  50, 0.9);
+  }
+  #minutes {
+    z-index: 6;
+    box-shadow: 1px 2px 4px rgba(50, 50, 50, 0.6);
+    background-color: rgba(50,  50,  50, 0.9);
+  }
+  #hours   {
+    z-index: 4;
+    box-shadow: 1px 2px 4px rgba(50, 50, 50, 0.6);
+    background-color: rgba(50,  50,  50, 0.9);
+  }
+  </style>
+  <script type="text/javascript" src="/js/prefixfree.min.js"></script>
+  <script type="text/javascript" src="/js/projstech.min.js"></script>
+  <script type="text/javascript" src="/javascript/css3Clock/ex02.js"></script>
+  <script type="text/javascript">
+  window.onload = function () {
+    // 시계 침 계산
+var secElement = document.getElementById("seconds");
+var minElement = document.getElementById("minutes");
+var hourElement = document.getElementById("hours");
+
+var defaults = {
+  sec:  { width:  4, height: 160 },
+  min:  { width: 14, height: 180 },
+  hour: { width: 16, height: 120 }
+}
+
+var sec = 0, min = 0, hour = 0;
+setInterval( function () {
+  sec = new Date().getSeconds();
+  min = new Date().getMinutes();
+  hour = new Date().getHours();
+
+  css(secElement, {
+    width: defaults.sec.width + "px",
+    height: defaults.sec.height + "px",
+    transformOrigin: (defaults.sec.width / 2) + "px 0px 0",
+    transform: "translate(" + (200 - defaults.sec.width / 2) + "px, 200px) rotate(" + (180 + sec * 6) + "deg)" 
+  });
+
+  css(minElement, {
+    width: defaults.min.width + "px",
+    height: defaults.min.height + "px",
+    transformOrigin: (defaults.min.width / 2) + "px 0px 0",
+    transform: "translate(" + (200 - defaults.min.width / 2) + "px, 200px) rotate(" + (180 + min * 6) + "deg)" 
+  });
+
+  var hourDeg = 180 + (hour % 12) * 30 + min / 2;
+
+  css(hourElement, {
+    width: defaults.hour.width + "px",
+    height: defaults.hour.height + "px",
+    transformOrigin: (defaults.hour.width / 2) + "px 0px 0",
+    transform: "translate(" + (200 - defaults.hour.width / 2) + "px, 200px) rotate(" + hourDeg + "deg)" 
+  });
+}, 1000);
+  };
+  </script>
+</head>
+<body>
+  <div id="clock">
+    <div id="core"></div>
+<div id="seconds" class="handofwatch"></div>
+<div id="minutes" class="handofwatch"></div>
+<div id="hours" class="handofwatch"></div>
+  </div>
+</body>
+</html>
